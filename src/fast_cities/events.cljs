@@ -4,7 +4,9 @@
 
 (def colors [:yellow :blue :white :green :red])
 
-(def card-values [:handshake
+(def card-values [:handshake-1
+                  :handshake-2
+                  :handshake-3
                   2
                   3
                   4
@@ -18,9 +20,7 @@
 (def initialized-cards
   (->> card-values
        (map (fn [v]
-              [v (if (= :handshake v)
-                   0
-                   false)]))
+              [v false]))
        (into {})))
 
 (def initialized-colors
@@ -56,32 +56,37 @@
 (defn shift-colors-< [colors]
   (take 5 (drop 4 (cycle colors))))
 
+(defn add-handshake [_ color db]
+  (let [handshake-1 (get-in db [:cards color :handshake-1])
+        handshake-2 (get-in db [:cards color :handshake-2])
+        handshake-3 (get-in db [:cards color :handshake-3])]
+    (cond-> db
+      (not handshake-1) (assoc-in [:cards color :handshake-1] true)
+      handshake-1       (assoc-in [:cards color :handshake-2] true)
+      handshake-2       (assoc-in [:cards color :handshake-3] true))))
 
-(defn inc-to-3-at-most
-  [number]
-  (if (= number 3)
-    number
-    (inc number)))
+(defn remove-handshake [_ color db]
+  (let [handshake-1 (get-in db [:cards color :handshake-1])
+        handshake-2 (get-in db [:cards color :handshake-2])
+        handshake-3 (get-in db [:cards color :handshake-3])] 
+    (cond-> db
+      handshake-3       (assoc-in [:cards color :handshake-3] false)
+      (not handshake-3) (assoc-in [:cards color :handshake-2] false)
+      (not handshake-2) (assoc-in [:cards color :handshake-1] false))))
 
-(defn dec-to-0-at-most
-  [number]
-  (if (= number 0)
-    number
-    (dec number)))
+(defn toggle-number-card [number color db]
+  (update-in db [:cards color number] not))
 
 (defn toggle-card [db current-color action]
   (let [card-type (case action
                     :add-handshake    :handshake
                     :remove-handshake :handshake
-                    action)]
-    (update-in db
-               [:cards current-color card-type]
-               (fn [value]
-                 (let [update-fn (case action
-                                   :add-handshake    inc-to-3-at-most
-                                   :remove-handshake dec-to-0-at-most
-                                   not)]
-                   (update-fn value))))))
+                    action)
+        update-fn (case action
+                    :add-handshake    add-handshake
+                    :remove-handshake remove-handshake
+                    toggle-number-card)]
+    (update-fn action current-color db)))
 
 (re-frame.core/reg-event-db
  :enter-keycode
