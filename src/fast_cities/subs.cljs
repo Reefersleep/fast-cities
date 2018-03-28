@@ -7,6 +7,11 @@
  fast-cities.db/current-color)
 
 (re-frame.core/reg-sub
+ :colors
+ (fn [db _]
+   (:colors db)))
+
+(re-frame.core/reg-sub
  :current-cards
  (fn [db _]
    (let [current-color (fast-cities.db/current-color db)]

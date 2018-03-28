@@ -16,13 +16,23 @@
                          (re-frame.core/dispatch [:enter-keycode keycode])))))
 
 (defn home-page []
-  [:div {:style {:color @(re-frame.core/subscribe [:current-color])
-                 :background-color :black}}
-   (->> @(re-frame.core/subscribe [:current-cards])
-        (map (fn [[card-type val]]
-               (let [s (str card-type val)]
-                 ^{:key s} [:div s]))))])
-
+  [:div
+   [:div {:style {:display        :flex
+                  :flex-direction :row
+                  :border         "1px solid black"}}
+    (->> @(re-frame.core/subscribe [:colors])
+         (map (fn [color]
+                ^{:key color} [:div {:style {:background-color color
+                                             :display          :flex
+                                             :min-height       10
+                                             :flex             "1 0 auto"}}])))]
+   [:div {:style {:color            @(re-frame.core/subscribe [:current-color])
+                  :background-color :black}}
+    (->> @(re-frame.core/subscribe [:current-cards])
+         (map (fn [[card-type val]]
+                (let [s (str card-type val)]
+                  ^{:key s} [:div s]))))]])
+[]
 ;; -------------------------
 ;; Initialize app
 
