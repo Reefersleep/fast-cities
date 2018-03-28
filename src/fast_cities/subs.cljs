@@ -10,4 +10,7 @@
  :current-cards
  (fn [db _]
    (let [current-color (fast-cities.db/current-color db)]
-     (get-in db [:cards current-color]))))
+     (->> (get-in db [:cards current-color])
+          (filter (fn [[card-type val]]
+                    (or (= :handshake card-type)
+                        val)))))))

@@ -19,9 +19,6 @@
   [:div {:style {:color @(re-frame.core/subscribe [:current-color])
                  :background-color :black}}
    (->> @(re-frame.core/subscribe [:current-cards])
-        (filter (fn [[card-type val]]
-                  (or (= :handshake card-type)
-                      val)))
         (map (fn [[card-type val]]
                (let [s (str card-type val)]
                  ^{:key s} [:div s]))))])
