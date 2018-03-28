@@ -27,11 +27,25 @@
                                              :min-height       10
                                              :flex             "1 0 auto"}}])))]
    [:div {:style {:color            @(re-frame.core/subscribe [:current-color])
-                  :background-color :black}}
+                  :background-color :white}}
     (->> @(re-frame.core/subscribe [:current-cards])
          (map (fn [[card-type val]]
-                (let [s (str card-type val)]
-                  ^{:key s} [:div s]))))]])
+                (let [s (str (case card-type
+                               :handshake-1 "handshake"
+                               :handshake-2 "handshake"
+                               :handshake-3 "handshake"
+                               card-type))]
+                  ^{:key card-type}
+                  [:div {:style {:border-top-left-radius  25
+                                 :border-top-right-radius 25
+                                 :padding-left            20
+                                 :line-height             "2em"
+                                 :color                   @(re-frame.core/subscribe [:current-color])
+                                 :opacity                 (if val
+                                                            1
+                                                            0.1)
+                                 :background-color        "rgba(0,0,0,1)"}}
+                   s]))))]])
 []
 ;; -------------------------
 ;; Initialize app

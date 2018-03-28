@@ -21,6 +21,4 @@
                        :handshake-1 -1
                        :handshake-2 0
                        :handshake-3 1
-                       card-type)))
-          (filter (fn [[card-type selected?]]
-                    selected?))))))
+                       card-type)))))))
