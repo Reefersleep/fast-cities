@@ -11,5 +11,11 @@
  (fn [db _]
    (let [current-color (fast-cities.db/current-color db)]
      (->> (get-in db [:cards current-color])
+          (sort-by (fn [[card-type _]]
+                     (case card-type
+                       :handshake-1 -1
+                       :handshake-2 0
+                       :handshake-3 1
+                       card-type)))
           (filter (fn [[card-type selected?]]
                     selected?))))))
