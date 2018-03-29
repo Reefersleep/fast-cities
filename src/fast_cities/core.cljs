@@ -48,7 +48,6 @@
                                  :background-color        "rgba(0,0,0,1)"}}
                    s]))))]
    [:div @(re-frame.core/subscribe [:score])]])
-[]
 ;; -------------------------
 ;; Initialize app
 
