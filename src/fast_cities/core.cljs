@@ -25,7 +25,8 @@
                 ^{:key color} [:div {:style {:background-color color
                                              :display          :flex
                                              :min-height       10
-                                             :flex             "1 0 auto"}}])))]
+                                             :flex             "1 0 auto"}}
+                               @(re-frame.core/subscribe [:score-for-color color])])))]
    [:div {:style {:color            @(re-frame.core/subscribe [:current-color])
                   :background-color :white}}
     (->> @(re-frame.core/subscribe [:current-cards])
