@@ -15,10 +15,16 @@
                        (let [keycode (.-keyCode event)]
                          (re-frame.core/dispatch [:enter-keycode keycode])))))
 
+;; Notes on Lost Cities card dimensions:
+;; ~1 width x 1,63 height
+
 (defn home-page []
-  [:div
+  [:div {:style {:display :flex
+                 :align-items :center
+                 :flex-direction :column}}
    [:div {:style {:display        :flex
                   :flex-direction :row
+                  :width          "80%"
                   :border         "1px solid black"}}
     (->> @(re-frame.core/subscribe [:colors])
          (map (fn [color]
@@ -28,6 +34,7 @@
                                              :flex             "1 0 auto"}}
                                @(re-frame.core/subscribe [:score-for-color color])])))]
    [:div {:style {:color            @(re-frame.core/subscribe [:current-color])
+                  :width "50%"
                   :background-color :white}}
     (->> @(re-frame.core/subscribe [:current-cards])
          (map (fn [[card-type val]]
