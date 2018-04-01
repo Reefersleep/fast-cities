@@ -43,7 +43,7 @@
                                                        :handshake-3}))
                                         (map first)
                                         (apply +))
-        more-than-8-cards-bonus    (when (< 8 (count selected-cards))
+        more-than-8-cards-bonus    (when (<= 8 (count selected-cards))
                                      20)]
     (if (seq selected-cards)
       (-> -20
