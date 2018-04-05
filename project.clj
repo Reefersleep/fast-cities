@@ -50,7 +50,7 @@
 
   :aliases {"package" ["do" "clean" ["cljsbuild" "once" "release"]]}
 
-  :profiles {:dev {:jvm-opts ["-Xmx1g" "--add-modules=java.xml.bind"] ;; This fixes the following compile problem concerning "javax.xml.bind:" https://dev.clojure.org/jira/browse/CLJS-2377 
+  :profiles {:dev {#_#_:jvm-opts ["-Xmx1g" "--add-modules=java.xml.bind"] ;; This fixes the following compile problem concerning "javax.xml.bind:" https://dev.clojure.org/jira/browse/CLJS-2377
                    :dependencies [[binaryage/devtools "0.9.7"]
                                   [figwheel-sidecar "0.5.15"]
                                   [org.clojure/tools.nrepl "0.2.13"]
