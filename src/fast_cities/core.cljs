@@ -148,16 +148,16 @@
          (fn [index card-identity]
            ^{:key card-identity}
            [:div
-            {:style {:margin-top      (if (= 0 index)
-                                        0
-                                        (let [card-height              (->> card-width-in-vw
-                                                                            card-width->card-height)
-                                              negative-card-height     (- card-height)
-                                              card-top                 (->> card-width-in-vw
-                                                                            card-width->card-height
-                                                                            height-of-card-top)
-                                              distance                 (+ negative-card-height card-top)]
-                                          (vw distance)))}}
+            {:style {:margin-top (if (= 0 index)
+                                   0
+                                   (let [card-height          (->> card-width-in-vw
+                                                                   card-width->card-height)
+                                         negative-card-height (- card-height)
+                                         card-top             (->> card-width-in-vw
+                                                                   card-width->card-height
+                                                                   height-of-card-top)
+                                         distance             (+ negative-card-height card-top)]
+                                     (vw distance)))}}
             [resizable-card {:color            (get color-identities->rgb-colors color-identity)
                              :card-identity    card-identity
                              :card-width-in-vw card-width-in-vw}]])))])
@@ -169,20 +169,20 @@
     [:svg {:width  "100%"
            :height "100%"}
      (when (= color-identity @(re-frame.core/subscribe [:current-color]))
-       [:circle {:cx "50%"
-                 :cy "50%"
-                 :r  "15%"
-                 :stroke :black
+       [:circle {:cx           "50%"
+                 :cy           "50%"
+                 :r            "15%"
+                 :stroke       :black
                  :stroke-width (vw (/ card-width-in-vw 100))
-                 :fill (get color-identities->rgb-colors color-identity)}])]]
+                 :fill         (get color-identities->rgb-colors color-identity)}])]]
    [stack {:card-values      card-values
            :card-width-in-vw card-width-in-vw
            :color-identity   color-identity}]])
 
 (defn stacks [{:keys [:card-width-in-vw :card-values] :as args}]
-  [:div {:style {:display :flex
+  [:div {:style {:display         :flex
                  :justify-content :space-between
-                 :width   "70%"}}
+                 :width           "70%"}}
    (->> color-identities
         (map-indexed (fn [index color-identity]
                        ^{:key color-identity}
@@ -190,16 +190,16 @@
                                                                 (filter second)
                                                                 (map first))
                                          :card-width-in-vw card-width-in-vw
-                                         :index index
-                                         :color-identity color-identity}])))])
+                                         :index            index
+                                         :color-identity   color-identity}])))])
 
 (defn home-page []
-  [:div {:style {:display :flex
-                 :align-items :center
+  [:div {:style {:display        :flex
+                 :align-items    :center
                  :flex-direction :column}}
-   [:div {:style {:display        :flex
-                  :flex-direction :row
-                  :width          "80%"
+   [:div {:style {:display         :flex
+                  :flex-direction  :row
+                  :width           "80%"
                   :justify-content :center}}
     [stacks {:card-width-in-vw 10
              :card-values      @(re-frame.core/subscribe [:cards])}]]
