@@ -201,42 +201,8 @@
                   :flex-direction :row
                   :width          "80%"
                   :justify-content :center}}
-    (let [values2          @(re-frame.core/subscribe [:cards])
-          values           (into [:handshake1 :handshake2 :handshake3] (range 2 11))
-          card-width-in-vw 10]
-      [stacks {:card-width-in-vw card-width-in-vw
-               :card-values      values2}])
-    
-    #_(->> @(re-frame.core/subscribe [:colors])
-         (map (fn [color]
-                ^{:key color} [:div {:style {:background-color color
-                                             :display          :flex
-                                             :min-height       10
-                                             :flex             "1 0 auto"}}
-                               @(re-frame.core/subscribe [:score-for-color color])]))
-         doall)]
-   #_[:div {:style {:color            @(re-frame.core/subscribe [:current-color])
-                  :width "50%"
-                  :background-color :white}}
-    (->> @(re-frame.core/subscribe [:current-cards])
-         (map (fn [[card-type val]]
-                (let [s (str (case card-type
-                               :handshake-1 "handshake"
-                               :handshake-2 "handshake"
-                               :handshake-3 "handshake"
-                               card-type))]
-                  ^{:key card-type}
-                  [:div {:style {:border-top-left-radius  25
-                                 :border-top-right-radius 25
-                                 :padding-left            20
-                                 :line-height             "2em"
-                                 :color                   @(re-frame.core/subscribe [:current-color])
-                                 :opacity                 (if val
-                                                            1
-                                                            0.1)
-                                 :background-color        "rgba(0,0,0,1)"}}
-                   s])))
-         doall)]
+    [stacks {:card-width-in-vw 10
+             :card-values      @(re-frame.core/subscribe [:cards])}]]
    [:div @(re-frame.core/subscribe [:score])]])
 ;; -------------------------
 ;; Initialize app
