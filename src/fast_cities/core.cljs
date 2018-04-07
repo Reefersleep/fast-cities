@@ -1,6 +1,6 @@
 (ns fast-cities.core
     (:require
-     [reagent.core :as r]
+     [reagent.core]
      [re-frame.core]
      [fast-cities.subs]
      [fast-cities.events]))
@@ -208,7 +208,7 @@
 ;; Initialize app
 
 (defn mount-root []
-  (r/render [home-page] (.getElementById js/document "app")))
+  (reagent.core/render [home-page] (.getElementById js/document "app")))
 
 (defn init! []
   (re-frame.core/dispatch-sync [:initialize-db])
