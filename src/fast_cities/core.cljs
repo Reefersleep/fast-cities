@@ -163,26 +163,26 @@
                              :card-width-in-vw card-width-in-vw}]])))])
 
 (defn stack-container [{:keys [:index :card-width-in-vw :color-identity :card-values]}]
-  [:div {:style {:padding-left (if (= 0 index)
-                                 0
-                                 (-> card-width-in-vw
-                                     (/ 3)
-                                     vw))}}
-   [:svg {:width  (vw card-width-in-vw)
-          :height (vw card-width-in-vw)}
-    (when (= color-identity @(re-frame.core/subscribe [:current-color]))
-      [:circle {:cx (vw (/ card-width-in-vw 2))
-                :cy (vw (/ card-width-in-vw 2))
-                :r  (vw (/ card-width-in-vw 9))
-                :stroke :black
-                :stroke-width (vw (/ card-width-in-vw 100))
-                :fill (get color-identities->rgb-colors color-identity)}])]
+  [:div
+   [:div {:style {:height (vw card-width-in-vw)
+                  :width  (vw card-width-in-vw)}}
+    [:svg {:width  "100%"
+           :height "100%"}
+     (when (= color-identity @(re-frame.core/subscribe [:current-color]))
+       [:circle {:cx "50%"
+                 :cy "50%"
+                 :r  "15%"
+                 :stroke :black
+                 :stroke-width (vw (/ card-width-in-vw 100))
+                 :fill (get color-identities->rgb-colors color-identity)}])]]
    [stack {:card-values      card-values
            :card-width-in-vw card-width-in-vw
            :color-identity   color-identity}]])
 
 (defn stacks [{:keys [:card-width-in-vw :card-values] :as args}]
-  [:div {:style {:display :flex}}
+  [:div {:style {:display :flex
+                 :justify-content :space-between
+                 :width   "70%"}}
    (->> color-identities
         (map-indexed (fn [index color-identity]
                        ^{:key color-identity}
