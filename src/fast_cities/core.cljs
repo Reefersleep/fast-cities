@@ -203,7 +203,7 @@
                   :justify-content :center}}
     [stacks {:card-width-in-vw 10
              :card-values      @(re-frame.core/subscribe [:cards])}]]
-   [:div @(re-frame.core/subscribe [:score])]])
+   [:div (str "Total score: " @(re-frame.core/subscribe [:score]))]])
 ;; -------------------------
 ;; Initialize app
 
