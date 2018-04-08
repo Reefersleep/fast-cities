@@ -176,13 +176,14 @@
                   :width  (vw card-width-in-vw)}}
     [:svg {:width  "100%"
            :height "100%"}
-     (when @(re-frame.core/subscribe [:show-indicator? color-identity])
-       [:circle {:cx           "50%"
-                 :cy           "50%"
-                 :r            "15%"
-                 :stroke       :black
-                 :stroke-width (vw (/ card-width-in-vw 100))
-                 :fill         (get color-identities->rgb-colors color-identity)}])]]
+     [:circle {:cx           "50%"
+               :cy           "50%"
+               :r            "15%"
+               :stroke       :black
+               :stroke-width (if @(re-frame.core/subscribe [:show-indicator? color-identity])
+                               "2%"
+                               "0.1%")
+               :fill         (get color-identities->rgb-colors color-identity)}]]]
    [stack {:card-values      card-values
            :card-width-in-vw card-width-in-vw
            :color-identity   color-identity}]])
