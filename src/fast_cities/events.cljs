@@ -92,9 +92,27 @@
  :enter-keycode
  (fn [db [_ keycode]]
    (let [action (get keycode->action keycode)
-         current-color (fast-cities.db/current-color db)]
+         current-color (fast-cities.db/current-color db)
+         db-with-keyboard-interaction        (assoc db :last-interaction-type :keyboard)]
      (case action
-       nil              db
-       :next-colour     (update db :colors shift-colors->)
-       :previous-colour (update db :colors shift-colors-<)
-       (toggle-card db current-color action)))))
+       nil              db-with-keyboard-interaction
+       :next-colour     (update db-with-keyboard-interaction :colors shift-colors->)
+       :previous-colour (update db-with-keyboard-interaction :colors shift-colors-<)
+       (toggle-card db-with-keyboard-interaction current-color action)))))
+
+(re-frame.core/reg-event-db
+ :mouse-toggle-card
+ (fn [db [_ color-identity card-identity]]
+   (-> db
+       (update-in [:cards color-identity card-identity] not)
+       (assoc :last-interaction-type :mouse)))) ;; TODO Would be nice also to update current-color. maybe make simpler scheme for current-color?
+
+(re-frame.core/reg-event-db
+ :mousing-over
+ (fn [db [_ color-identity card-identity]]
+   (assoc-in db [:mouseover color-identity card-identity] true)))
+
+(re-frame.core/reg-event-db
+ :mouse-leave
+ (fn [db [_ color-identity card-identity]]
+   (assoc-in db [:mouseover color-identity card-identity] nil)))

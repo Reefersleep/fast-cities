@@ -89,3 +89,21 @@
           [(first color-map) (second color-map)]))
        first ;; huh? Why is it wrapped in a second vector?
        (score-for-one-color))))
+
+(re-frame.core/reg-sub
+ :mouse-over?
+ (fn [db [_ color-identity card-identity]] ;; TODO ineffective - subscribe to something that doesn't change as often first
+   (get-in db [:mouseover color-identity card-identity])))
+
+(re-frame.core/reg-sub
+ :last-interaction-type
+ (fn [db [_]] ;; TODO ineffective - subscribe to something that doesn't change as often first
+   (get db :last-interaction-type)))
+
+(re-frame.core/reg-sub
+ :show-indicator?
+ :<- [:last-interaction-type]
+ :<- [:current-color]
+ (fn [[last-interaction-type current-color] [_ color-identity]]
+   (and (= :keyboard last-interaction-type)
+        (= current-color color-identity))))

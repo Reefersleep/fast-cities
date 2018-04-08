@@ -77,8 +77,9 @@
   "A component for a Lost Cities playing card.
   This component is able to resize dynamically while
   keeping its dimensions intact."
-  [{:keys [card-width-in-vw card-identity color]}]
-  (let [card-width                         card-width-in-vw
+  [{:keys [card-width-in-vw card-identity color-identity selected?]}]
+  (let [color                              (get color-identities->rgb-colors color-identity)
+        card-width                         card-width-in-vw
         card-height                        (card-width->card-height card-width-in-vw)
         top-height                         (height-of-card-top card-height)
         bottom-height                      top-height
@@ -95,8 +96,17 @@
                         :min-height      "100%" ;; This fixes problem where differences in floating point calculation results would sometime cause the bottom to become disconnected from the top, as well as (as a side-effect, I guess) sometimes causing a gap between some of the tops of layered cards, such as cards 9. and 10 being separated height-wise by a couple of pixels.
                         :display         :flex
                         :flex-direction  :column
-                        :justify-content :space-between}}
-     [:div.top {:style {:display                 :flex
+                        :justify-content :space-between
+                        :opacity                 (if (or selected? @(re-frame.core/subscribe [:mouse-over? color-identity card-identity]))
+                                                   1
+                                                   0.1)}}
+     [:div.top {:on-mouse-over (fn [event]
+                                  (re-frame.core/dispatch [:mousing-over color-identity card-identity]))
+                :on-mouse-out (fn [event]
+                                  (re-frame.core/dispatch [:mouse-leave color-identity card-identity]))
+                :on-click     (fn [event]
+                                (re-frame.core/dispatch [:mouse-toggle-card color-identity card-identity]))
+                :style {:display                 :flex
                         :justify-content         :space-between
                         :align-items             :center
                         :height                  (vw top-height)
@@ -108,9 +118,6 @@
                         :line-height             (vw line-height)
                         :font-size               (vw font-size)
                         :color                   color
-                        :opacity                 (if val
-                                                   1
-                                                   0.1)
                         :background-color        "rgba(0,0,0,1)"}}
       [card-symbol {:card-identity card-identity
                     :class         "card-symbol-left"
@@ -134,9 +141,6 @@
                            :border-bottom-left-radius  (vw border-radius)
                            :border-bottom-right-radius (vw border-radius)
                            :padding-left               20
-                           :opacity                    (if val
-                                                         1
-                                                         0.1)
                            :background-color           color}}]]))
 
 (defn stack [{:keys [card-values
@@ -145,7 +149,7 @@
   [:div {:style {:width (vw card-width-in-vw)}}
    (->> card-values
         (map-indexed
-         (fn [index card-identity]
+         (fn [index [card-identity selected?]]
            ^{:key card-identity}
            [:div
             {:style {:margin-top (if (= 0 index)
@@ -157,8 +161,11 @@
                                                                    card-width->card-height
                                                                    height-of-card-top)
                                          distance             (+ negative-card-height card-top)]
-                                     (vw distance)))}}
-            [resizable-card {:color            (get color-identities->rgb-colors color-identity)
+                                     (vw distance)))
+                     :z-index    index       ;; Need z-index in order to prevent flickering of all but the top card when I mouseover their top.
+                     :position   :relative}} ;;Need a :position value in order for z-index to come into effect.
+            [resizable-card {:color-identity   color-identity
+                             :selected?        selected?
                              :card-identity    card-identity
                              :card-width-in-vw card-width-in-vw}]])))])
 
@@ -168,7 +175,7 @@
                   :width  (vw card-width-in-vw)}}
     [:svg {:width  "100%"
            :height "100%"}
-     (when (= color-identity @(re-frame.core/subscribe [:current-color]))
+     (when @(re-frame.core/subscribe [:show-indicator? color-identity])
        [:circle {:cx           "50%"
                  :cy           "50%"
                  :r            "15%"
@@ -196,9 +203,7 @@
    (->> color-identities
         (map-indexed (fn [index color-identity]
                        ^{:key color-identity}
-                       [stack-container {:card-values      (->> (get card-values color-identity)
-                                                                (filter second)
-                                                                (map first))
+                       [stack-container {:card-values      (get card-values color-identity)
                                          :card-width-in-vw card-width-in-vw
                                          :index            index
                                          :color-identity   color-identity}])))])
