@@ -179,9 +179,19 @@
            :card-width-in-vw card-width-in-vw
            :color-identity   color-identity}]])
 
+(defn eleven-card-tops [card-width-in-vw]
+  (->> card-width-in-vw
+       card-width->card-height
+       height-of-card-top
+       (* 11)))
+
 (defn stacks [{:keys [:card-width-in-vw :card-values] :as args}]
   [:div {:style {:display         :flex
                  :justify-content :space-between
+                 :height          (->> card-width-in-vw
+                                       (+ (eleven-card-tops card-width-in-vw))
+                                       (+ (card-width->card-height card-width-in-vw))
+                                       vw)
                  :width           "70%"}}
    (->> color-identities
         (map-indexed (fn [index color-identity]
@@ -195,7 +205,9 @@
 
 (defn home-page []
   [:div {:style {:display        :flex
+                 :min-height     "100vh"
                  :align-items    :center
+                 :justify-content :space-between
                  :flex-direction :column}}
    [:div {:style {:display         :flex
                   :flex-direction  :row
@@ -203,7 +215,8 @@
                   :justify-content :center}}
     [stacks {:card-width-in-vw 10
              :card-values      @(re-frame.core/subscribe [:cards])}]]
-   [:div (str "Total score: " @(re-frame.core/subscribe [:score]))]])
+   [:div {:style {:margin-bottom "20vh"}}
+    (str "Total score: " @(re-frame.core/subscribe [:score]))]])
 ;; -------------------------
 ;; Initialize app
 
