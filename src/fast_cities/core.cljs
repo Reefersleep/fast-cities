@@ -97,9 +97,10 @@
                         :display         :flex
                         :flex-direction  :column
                         :justify-content :space-between
-                        :opacity                 (if (or selected? @(re-frame.core/subscribe [:mouse-over? color-identity card-identity]))
-                                                   1
-                                                   0.1)}}
+                        :opacity                 (cond
+                                                   selected? 1
+                                                   @(re-frame.core/subscribe [:mouse-over? color-identity card-identity]) 0.3
+                                                   :else 0)}}
      [:div.top {:on-mouse-over (fn [event]
                                   (re-frame.core/dispatch [:mousing-over color-identity card-identity]))
                 :on-mouse-out (fn [event]
