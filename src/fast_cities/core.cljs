@@ -188,9 +188,9 @@
 (defn stacks [{:keys [:card-width-in-vw :card-values] :as args}]
   [:div {:style {:display         :flex
                  :justify-content :space-between
-                 :height          (->> card-width-in-vw
-                                       (+ (eleven-card-tops card-width-in-vw))
-                                       (+ (card-width->card-height card-width-in-vw))
+                 :height          (->> card-width-in-vw                               ;; height of the indicator
+                                       (+ (eleven-card-tops card-width-in-vw))        ;; a full stack minus the bottom card
+                                       (+ (card-width->card-height card-width-in-vw)) ;; the bottom card
                                        vw)
                  :width           "70%"}}
    (->> color-identities
