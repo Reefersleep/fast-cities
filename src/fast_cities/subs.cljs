@@ -24,7 +24,7 @@
                        card-type)))))))
 
 (defn score-for-one-color
-  [[color cards]]
+  [cards]
   (let [selected-cards             (->> cards
                                         (filter (fn [[card-type selected?]]
                                                   selected?)))
@@ -76,19 +76,17 @@
  :<- [:cards]
  (fn [cards _]
    (->> cards
-        (map score-for-one-color)
+        (map (fn [[color-identity cards]]
+               (score-for-one-color cards)))
         (apply +))))
 
 (re-frame.core/reg-sub
  :score-for-color
  :<- [:cards] ;; this is rendered every time a card is toggled for _all_ colors. not so nice
- (fn [cards [_ color]]
+ (fn [cards [_ color-identity]]
    (-> cards
-       (select-keys [color])
-       ((fn [color-map]
-          [(first color-map) (second color-map)]))
-       first ;; huh? Why is it wrapped in a second vector?
-       (score-for-one-color))))
+       (get color-identity)
+       score-for-one-color)))
 
 (re-frame.core/reg-sub
  :mouse-over?

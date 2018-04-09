@@ -186,21 +186,13 @@
                :fill         (get color-identities->rgb-colors color-identity)}]]]
    [stack {:card-values      card-values
            :card-width-in-vw card-width-in-vw
-           :color-identity   color-identity}]])
-
-(defn eleven-card-tops [card-width-in-vw]
-  (->> card-width-in-vw
-       card-width->card-height
-       height-of-card-top
-       (* 11)))
+           :color-identity   color-identity}]
+   [:div {:style {:text-align :center}}
+    @(re-frame.core/subscribe [:score-for-color color-identity])]])
 
 (defn stacks [{:keys [:card-width-in-vw :card-values] :as args}]
   [:div {:style {:display         :flex
                  :justify-content :space-between
-                 :height          (->> card-width-in-vw                               ;; height of the indicator
-                                       (+ (eleven-card-tops card-width-in-vw))        ;; a full stack minus the bottom card
-                                       (+ (card-width->card-height card-width-in-vw)) ;; the bottom card
-                                       vw)
                  :width           "70%"}}
    (->> color-identities
         (map-indexed (fn [index color-identity]
@@ -222,7 +214,7 @@
                   :justify-content :center}}
     [stacks {:card-width-in-vw 10
              :card-values      @(re-frame.core/subscribe [:cards])}]]
-   [:div {:style {:margin-bottom "20vh"}}
+   [:div {:style {:margin-bottom "20%"}}
     (str "Total score: " @(re-frame.core/subscribe [:score]))]])
 ;; -------------------------
 ;; Initialize app
