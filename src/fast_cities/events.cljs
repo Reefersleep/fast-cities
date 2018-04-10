@@ -151,3 +151,9 @@
    (-> db
        (assoc-in [:mouseover color-identity card-identity] nil)
        (update-in [:cards color-identity] fast-cities.db/sort-stack))))
+
+(re-frame.core/reg-event-db
+ :toggle-score-details
+ (fn [db _]
+   (-> db
+       (update :show-score-details? not))))

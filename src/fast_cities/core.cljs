@@ -209,9 +209,15 @@
                  :justify-content :space-between
                  :flex-direction :column}}
    [:div {:style {:display         :flex
-                  :flex-direction  :row
+                  :flex-direction  :column
                   :width           "80%"
-                  :justify-content :center}}
+                  :align-items     :center}}
+    [:div {:style {:height          "10vwh"
+                   :width           "100%"
+                   :display         :flex
+                   :justify-content :flex-end}}
+     [:button {:on-click #(re-frame.core/dispatch [:toggle-score-details])}
+      "Toggle details"]]
     [stacks {:card-width-in-vw 10
              :card-values      @(re-frame.core/subscribe [:cards])}]]
    [:div {:style {:margin-bottom "2%"}}
