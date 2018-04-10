@@ -54,9 +54,10 @@
 (re-frame.core/reg-event-fx
  :initialize-db
  (fn [_]
-   {:db {:cards         initialized-colors
-         :colors        colors
-         :current-color :white}}))
+   {:db {:cards               initialized-colors
+         :colors              colors
+         :current-color       :white
+         :show-score-details? true}}))
 
 (defn shift-colors-> [colors]
   (take 5 (drop 1 (cycle colors))))

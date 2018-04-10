@@ -82,11 +82,13 @@
 
 (re-frame.core/reg-sub
  :score-for-color
- :<- [:cards] ;; this is rendered every time a card is toggled for _all_ colors. not so nice
- (fn [cards [_ color-identity]]
-   (-> cards
-       (get color-identity)
-       score-for-one-color)))
+ (fn [db [_ color-identity]]
+   (let [{:keys [:cards :show-score-details?]} db]
+     (when show-score-details?
+       (-> db
+           :cards
+           (get color-identity)
+           score-for-one-color)))))
 
 (re-frame.core/reg-sub
  :mouse-over?
