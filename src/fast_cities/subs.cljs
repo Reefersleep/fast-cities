@@ -52,24 +52,11 @@
           (+ more-than-8-cards-bonus))
       0)))
 
-(defn sort-value-for-card-type [card-type]
-  (case card-type
-    :handshake-1 -1
-    :handshake-2 0
-    :handshake-3 1
-    card-type))
-
 (re-frame.core/reg-sub
  :cards
  (fn [db _]
    (->> db
-        :cards
-        (map (fn [[color cards]]
-               [color (->> cards
-                           (into (sorted-map-by (fn [key1 key2]
-                                                  (compare (sort-value-for-card-type key1)
-                                                           (sort-value-for-card-type key2))))))]))
-        (into {}))))
+        :cards)))
 
 (re-frame.core/reg-sub
  :score

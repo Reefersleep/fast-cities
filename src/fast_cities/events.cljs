@@ -34,6 +34,7 @@
   (->> colors
        (map (fn [color]
               [color initialized-cards]))
+       fast-cities.db/sort-ascending
        (into {})))
 
 (def keycode->action {65  :remove-handshake
@@ -126,21 +127,27 @@
        nil              db
        :next-colour     (update db :current-color (partial right-color-of colors))
        :previous-colour (update db :current-color (partial left-color-of colors))
-       (toggle-card db current-color action)))))
+       (-> (toggle-card db current-color action)
+           (update-in [:cards current-color] fast-cities.db/sort-stack))))))
 
 (re-frame.core/reg-event-db
  :mouse-toggle-card
  (fn [db [_ color-identity card-identity]]
    (-> db
        (update-in [:cards color-identity card-identity] not)
-       (assoc :current-color color-identity))))
+       (assoc :current-color color-identity)
+       (update-in [:cards color-identity] fast-cities.db/sort-stack))))
 
 (re-frame.core/reg-event-db
  :mousing-over
  (fn [db [_ color-identity card-identity]]
-   (assoc-in db [:mouseover color-identity card-identity] true)))
+   (-> db
+       (assoc-in [:mouseover color-identity card-identity] true)
+       (update-in [:cards color-identity] fast-cities.db/sort-stack))))
 
 (re-frame.core/reg-event-db
  :mouse-leave
  (fn [db [_ color-identity card-identity]]
-   (assoc-in db [:mouseover color-identity card-identity] nil)))
+   (-> db
+       (assoc-in [:mouseover color-identity card-identity] nil)
+       (update-in [:cards color-identity] fast-cities.db/sort-stack))))
