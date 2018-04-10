@@ -33,6 +33,7 @@
                          :output-to "public/js/app.js"
                          :output-dir "public/js/out"
                          :asset-path   "js/out"
+                         :preloads [re-frisk.preload]
                          :source-map true
                          :optimizations :none
                          :pretty-print  true}
@@ -52,6 +53,7 @@
 
   :profiles {:dev {#_#_:jvm-opts ["-Xmx1g" "--add-modules=java.xml.bind"] ;; This fixes the following compile problem concerning "javax.xml.bind:" https://dev.clojure.org/jira/browse/CLJS-2377
                    :dependencies [[binaryage/devtools "0.9.7"]
+                                  [re-frisk "0.5.3"]
                                   [figwheel-sidecar "0.5.15"]
                                   [org.clojure/tools.nrepl "0.2.13"]
                                   [com.cemerick/piggieback "0.2.2"]]}})
