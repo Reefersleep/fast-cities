@@ -2,6 +2,13 @@
   (:require [re-frame.core]
             [fast-cities.db]))
 
+(defn positions
+  [pred coll]
+  (keep-indexed (fn [idx x]
+                  (when (pred x)
+                    idx))
+                coll))
+
 (def colors [:yellow :blue :white :green :red])
 
 (def card-values [:handshake-1
@@ -47,14 +54,34 @@
 (re-frame.core/reg-event-fx
  :initialize-db
  (fn [_]
-   {:db {:cards  initialized-colors
-         :colors colors}}))
+   {:db {:cards         initialized-colors
+         :colors        colors
+         :current-color :white}}))
 
 (defn shift-colors-> [colors]
   (take 5 (drop 1 (cycle colors))))
 
 (defn shift-colors-< [colors]
   (take 5 (drop 4 (cycle colors))))
+
+(defn left-color-of [colors current-color]
+  (let [idx (->> colors
+                 (positions #{current-color})
+                 first)]
+    (if (= 0 idx)
+      (last colors)
+      (get colors (- idx 1)))))
+
+(defn right-color-of [colors current-color]
+  (let [idx (->> colors
+                 (positions #{current-color})
+                 first)
+        max-idx (-> colors
+                    count
+                    (- 1))]
+    (if (= max-idx idx)
+      (first colors)
+      (get colors (+ idx 1)))))
 
 (defn add-handshake [_ color db]
   (let [handshake-1 (get-in db [:cards color :handshake-1])
@@ -92,20 +119,20 @@
  :enter-keycode
  (fn [db [_ keycode]]
    (let [action (get keycode->action keycode)
-         current-color (fast-cities.db/current-color db)
-         db-with-keyboard-interaction        (assoc db :last-interaction-type :keyboard)]
+         current-color (:current-color db)
+         colors        (:colors db)]
      (case action
-       nil              db-with-keyboard-interaction
-       :next-colour     (update db-with-keyboard-interaction :colors shift-colors->)
-       :previous-colour (update db-with-keyboard-interaction :colors shift-colors-<)
-       (toggle-card db-with-keyboard-interaction current-color action)))))
+       nil              db
+       :next-colour     (update db :current-color (partial right-color-of colors))
+       :previous-colour (update db :current-color (partial left-color-of colors))
+       (toggle-card db current-color action)))))
 
 (re-frame.core/reg-event-db
  :mouse-toggle-card
  (fn [db [_ color-identity card-identity]]
    (-> db
        (update-in [:cards color-identity card-identity] not)
-       (assoc :last-interaction-type :mouse)))) ;; TODO Would be nice also to update current-color. maybe make simpler scheme for current-color?
+       (assoc :current-color color-identity))))
 
 (re-frame.core/reg-event-db
  :mousing-over

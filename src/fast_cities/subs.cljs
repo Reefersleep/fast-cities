@@ -4,7 +4,7 @@
 
 (re-frame.core/reg-sub
  :current-color
- fast-cities.db/current-color)
+ :current-color)
 
 (re-frame.core/reg-sub
  :colors
@@ -14,7 +14,7 @@
 (re-frame.core/reg-sub
  :current-cards
  (fn [db _]
-   (let [current-color (fast-cities.db/current-color db)]
+   (let [current-color (:current-color db)]
      (->> (get-in db [:cards current-color])
           (sort-by (fn [[card-type _]]
                      (case card-type
@@ -94,14 +94,7 @@
    (get-in db [:mouseover color-identity card-identity])))
 
 (re-frame.core/reg-sub
- :last-interaction-type
- (fn [db [_]] ;; TODO ineffective - subscribe to something that doesn't change as often first
-   (get db :last-interaction-type)))
-
-(re-frame.core/reg-sub
  :show-indicator?
- :<- [:last-interaction-type]
  :<- [:current-color]
- (fn [[last-interaction-type current-color] [_ color-identity]]
-   (and (= :keyboard last-interaction-type)
-        (= current-color color-identity))))
+ (fn [current-color [_ color-identity]]
+   (= current-color color-identity)))
