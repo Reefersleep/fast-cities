@@ -37,8 +37,8 @@
        fast-cities.db/sort-ascending
        (into {})))
 
-(def keycode->action
-  {192 :remove-handshake ;; keycodes for number row
+(def char-code->action
+  {36  :remove-handshake ;; charcodes for number row
    49  :add-handshake
    50  2
    51  3
@@ -49,22 +49,9 @@
    56  8
    57  9
    48  10
-   13  :next-colour
-   32  :previous-colour}
-  #_{65  :remove-handshake ;; keycodes for home row
-   81  :add-handshake
-   83  2
-   68  3
-   70  4
-   71  5
-   72  6
-   74  7
-   75  8
-   76  9
-   186 10
-   13  :next-colour
-   32  :next-colour
-   8   :previous-colour})
+   13  :next-colour ;; Enter in Chrome
+   0   :next-colour ;; Enter in Firefox ;; TODO Maybe find a more cross-browser-resilient solution...
+   32  :previous-colour})
 
 (re-frame.core/reg-event-fx
  :initialize-db
@@ -132,9 +119,9 @@
     (update-fn action current-color db)))
 
 (re-frame.core/reg-event-db
- :enter-keycode
- (fn [db [_ keycode]]
-   (let [action (get keycode->action keycode)
+ :enter-char-code
+ (fn [db [_ char-code]]
+   (let [action (get char-code->action char-code)
          current-color (:current-color db)
          colors        (:colors db)]
      (case action

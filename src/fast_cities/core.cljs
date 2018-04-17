@@ -10,10 +10,10 @@
 
 (defn add-event-dispatcher-for-keydown []
   (.addEventListener js/document
-                     "keydown"
+                     "keypress"
                      (fn [event]
-                       (let [keycode (.-keyCode event)]
-                         (re-frame.core/dispatch [:enter-keycode keycode])))))
+                       (let [char-code (.-charCode event)]
+                         (re-frame.core/dispatch [:enter-char-code char-code])))))
 
 (def color-identities->rgb-colors {:white  "rgb(293,242,239)"
                                    :blue   "rgb(18,176,237)"
