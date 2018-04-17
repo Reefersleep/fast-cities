@@ -216,7 +216,7 @@
                    :width           "100%"
                    :display         :flex
                    :justify-content :flex-end}}
-     [:button {:on-click #(re-frame.core/dispatch [:toggle-score-details])}
+     #_[:button {:on-click #(re-frame.core/dispatch [:toggle-score-details])}
       "Toggle details"]]
     [stacks {:card-width-in-vw 10
              :card-values      @(re-frame.core/subscribe [:cards])}]]

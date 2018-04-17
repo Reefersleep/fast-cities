@@ -58,7 +58,7 @@
    {:db {:cards               initialized-colors
          :colors              colors
          :current-color       :white
-         :show-score-details? true}}))
+         :show-score-details? false}}))
 
 (defn shift-colors-> [colors]
   (take 5 (drop 1 (cycle colors))))
