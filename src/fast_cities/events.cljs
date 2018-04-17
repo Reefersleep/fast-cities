@@ -37,20 +37,34 @@
        fast-cities.db/sort-ascending
        (into {})))
 
-(def keycode->action {65  :remove-handshake
-                      81  :add-handshake
-                      83  2
-                      68  3
-                      70  4
-                      71  5
-                      72  6
-                      74  7
-                      75  8
-                      76  9
-                      186 10
-                      13  :next-colour
-                      32  :next-colour
-                      8   :previous-colour})
+(def keycode->action
+  {192 :remove-handshake ;; keycodes for number row
+   49  :add-handshake
+   50  2
+   51  3
+   52  4
+   53  5
+   54  6
+   55  7
+   56  8
+   57  9
+   48  10
+   13  :next-colour
+   32  :previous-colour}
+  #_{65  :remove-handshake ;; keycodes for home row
+   81  :add-handshake
+   83  2
+   68  3
+   70  4
+   71  5
+   72  6
+   74  7
+   75  8
+   76  9
+   186 10
+   13  :next-colour
+   32  :next-colour
+   8   :previous-colour})
 
 (re-frame.core/reg-event-fx
  :initialize-db
