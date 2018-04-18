@@ -38,8 +38,7 @@
        (into {})))
 
 (def char-code->action
-  {36  :remove-handshake ;; charcodes for number row
-   49  :add-handshake
+  {49  :cycle-handshake ;; charcodes for number row
    50  2
    51  3
    52  4
@@ -107,12 +106,25 @@
 (defn toggle-number-card [number color db]
   (update-in db [:cards color number] not))
 
+(defn cycle-handshake [_ color db]
+  (let [handshake-1 (get-in db [:cards color :handshake-1])
+        handshake-2 (get-in db [:cards color :handshake-2])
+        handshake-3 (get-in db [:cards color :handshake-3])]
+    (cond
+      handshake-3 (update-in db [:cards color] assoc :handshake-3 false
+                                                     :handshake-2 false
+                                                     :handshake-1 false)
+      handshake-2 (assoc-in db [:cards color :handshake-3] true)
+      handshake-1 (assoc-in db [:cards color :handshake-2] true)
+      :else       (assoc-in db [:cards color :handshake-1] true))))
+
 (defn toggle-card [db current-color action]
   (let [card-type (case action
                     :add-handshake    :handshake
                     :remove-handshake :handshake
                     action)
         update-fn (case action
+                    :cycle-handshake  cycle-handshake
                     :add-handshake    add-handshake
                     :remove-handshake remove-handshake
                     toggle-number-card)]
