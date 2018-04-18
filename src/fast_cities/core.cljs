@@ -171,7 +171,7 @@
                              :card-width-in-vw card-width-in-vw}]])))])
 
 (defn stack-container [{:keys [:index :card-width-in-vw :color-identity :card-values]}]
-  [:div
+  [:div {:on-mouse-over #(re-frame.core/dispatch [:focus-on color-identity])}
    [:div {:style {:height (vw card-width-in-vw)
                   :width  (vw card-width-in-vw)}}
     [:svg {:width  "100%"

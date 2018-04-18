@@ -152,6 +152,12 @@
        (update-in [:cards color-identity] fast-cities.db/sort-stack))))
 
 (re-frame.core/reg-event-db
+ :focus-on
+ (fn [db [_ color-identity]]
+   (-> db
+       (assoc :current-color color-identity))))
+
+(re-frame.core/reg-event-db
  :mousing-over
  (fn [db [_ color-identity card-identity]]
    (-> db
