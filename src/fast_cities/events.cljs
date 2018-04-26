@@ -58,7 +58,8 @@
    {:db {:cards               initialized-colors
          :colors              colors
          :current-color       :white
-         :show-score-details? false}}))
+         :show-score-details? false
+         :show-options?       false}}))
 
 (defn shift-colors-> [colors]
   (take 5 (drop 1 (cycle colors))))
@@ -176,3 +177,9 @@
  (fn [db _]
    (-> db
        (update :show-score-details? not))))
+
+(re-frame.core/reg-event-db
+ :toggle-options
+ (fn [db _]
+   (-> db
+       (update :show-options? not))))

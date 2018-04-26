@@ -87,3 +87,8 @@
  :<- [:current-color]
  (fn [current-color [_ color-identity]]
    (= current-color color-identity)))
+
+(re-frame.core/reg-sub
+ :show-options?
+ (fn [db _]
+   (get db :show-options?)))
