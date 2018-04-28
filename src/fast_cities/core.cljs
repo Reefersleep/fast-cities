@@ -202,12 +202,44 @@
                                          :index            index
                                          :color-identity   color-identity}])))])
 
+(defn modal []
+  [:div {:on-click (fn [event]
+                     (re-frame.core/dispatch [:toggle-options]))
+         :style    {:display          (if @(re-frame.core/subscribe [:show-options?])
+                                        :block
+                                        :none)
+                    :position         :fixed
+                    :z-index          1000
+                    :left             0
+                    :top              0
+                    :width            "100%"
+                    :height           "100%"
+                    :overflow         :auto
+                    :background-color "rgba(0,0,0,0.4)"}}
+   [:div {:on-click (fn [event]
+                      (.stopPropagation event))
+          :style    {:background-color "#fefefe"
+                     :margin           "15% auto"
+                     :padding          "5vw"
+                     :border           "1px solid #888"
+                     :width            "80%"}}
+    [:span {:on-click #(re-frame.core/dispatch [:toggle-options])
+            :style    {:color            "#aaa"
+                       :float            :right
+                       :cursor           :pointer
+                       :text-decoraction :none
+                       :font-size        28
+                       :font-weight      :bold}}
+     "x"]
+    [:p "These are all my options"]]])
+
 (defn home-page []
   [:div {:style {:display        :flex
                  :min-height     "100vh"
                  :align-items    :center
                  :justify-content :space-between
                  :flex-direction :column}}
+   [modal]
    [:div {:style {:display         :flex
                   :flex-direction  :column
                   :width           "80%"
@@ -216,6 +248,8 @@
                    :width           "100%"
                    :display         :flex
                    :justify-content :flex-end}}
+     #_[:button {:on-click #(re-frame.core/dispatch [:toggle-options])}
+      "OPTIONS"]
      #_[:button {:on-click #(re-frame.core/dispatch [:toggle-score-details])}
       "Toggle details"]]
     [stacks {:card-width-in-vw 10
