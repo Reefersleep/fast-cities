@@ -3,7 +3,9 @@
      [reagent.core]
      [re-frame.core]
      [fast-cities.subs]
-     [fast-cities.events]))
+     [fast-cities.events]
+     [re-learn.core]
+     [re-learn.views]))
 
 ;; -------------------------
 ;; Views
@@ -233,6 +235,25 @@
      "x"]
     [:p "These are all my options"]]])
 
+#_(def score
+  (re-learn.core/with-tutorial
+    {:id :score-tutorial
+     :name "The score"
+     :description "This is your score!"
+     :lessons [{:id :welcome-lesson
+                :description "Welcome to the tutorial"}]}
+    (fn []
+      [:div {:style {:margin-bottom "2%"}}
+       (str "Total score: " @(re-frame.core/subscribe [:score]))])))
+
+(def score
+  (re-learn.core/with-lesson
+    {:id          :score-tutorial
+     :description "This is your score!"}
+    (fn []
+      [:div {:style {:margin-bottom "2%"}}
+       (str "Total score: " @(re-frame.core/subscribe [:score]))])))
+
 (defn home-page []
   [:div {:style {:display        :flex
                  :min-height     "100vh"
@@ -254,12 +275,12 @@
       "Toggle details"]]
     [stacks {:card-width-in-vw 10
              :card-values      @(re-frame.core/subscribe [:cards])}]]
-   [:div {:style {:margin-bottom "2%"}}
-    (str "Total score: " @(re-frame.core/subscribe [:score]))]])
+   [score]])
 ;; -------------------------
 ;; Initialize app
 
 (defn mount-root []
+  (reagent.core/render [re-learn.views/tutorial {:context? true}] (.getElementById js/document "tutorial"))
   (reagent.core/render [home-page] (.getElementById js/document "app")))
 
 (defn init! []
