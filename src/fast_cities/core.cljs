@@ -248,7 +248,7 @@
                    :width           "100%"
                    :display         :flex
                    :justify-content :flex-end}}
-     [:button {:on-click #(re-frame.core/dispatch [:toggle-options])}
+     #_[:button {:on-click #(re-frame.core/dispatch [:toggle-options])}
       "OPTIONS"]
      #_[:button {:on-click #(re-frame.core/dispatch [:toggle-score-details])}
       "Toggle details"]]
