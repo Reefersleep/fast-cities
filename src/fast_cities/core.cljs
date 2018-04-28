@@ -204,32 +204,32 @@
 
 (defn modal []
   [:div {:on-click (fn [event]
-                                   (re-frame.core/dispatch [:toggle-options]))
-                       :style    {:display          (if @(re-frame.core/subscribe [:show-options?])
-                                                      :block
-                                                      :none)
-                                  :position         :fixed
-                                  :z-index          1000
-                                  :left             0
-                                  :top              0
-                                  :width            "100%"
-                                  :height           "100%"
-                                  :overflow         :auto
-                                  :background-color "rgba(0,0,0,0.4)"}}
+                     (re-frame.core/dispatch [:toggle-options]))
+         :style    {:display          (if @(re-frame.core/subscribe [:show-options?])
+                                        :block
+                                        :none)
+                    :position         :fixed
+                    :z-index          1000
+                    :left             0
+                    :top              0
+                    :width            "100%"
+                    :height           "100%"
+                    :overflow         :auto
+                    :background-color "rgba(0,0,0,0.4)"}}
    [:div {:on-click (fn [event]
-                                    (.stopPropagation event))
-                        :style {:background-color "#fefefe"
-                                :margin           "15% auto"
-                                :padding          20
-                                :border           "1px solid #888"
-                                :width            "80%"}}
+                      (.stopPropagation event))
+          :style    {:background-color "#fefefe"
+                     :margin           "15% auto"
+                     :padding          "5vw"
+                     :border           "1px solid #888"
+                     :width            "80%"}}
     [:span {:on-click #(re-frame.core/dispatch [:toggle-options])
-                  :style    {:color       "#aaa"
-                             :float       :right
-                             :cursor      :pointer
-                             :text-decoraction :none
-                             :font-size   28
-                             :font-weight :bold}}
+            :style    {:color            "#aaa"
+                       :float            :right
+                       :cursor           :pointer
+                       :text-decoraction :none
+                       :font-size        28
+                       :font-weight      :bold}}
      "x"]
     [:p "These are all my options"]]])
 
