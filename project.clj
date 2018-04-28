@@ -55,7 +55,7 @@
   :profiles {:dev {#_#_:jvm-opts ["-Xmx1g" "--add-modules=java.xml.bind"] ;; This fixes the following compile problem concerning "javax.xml.bind:" https://dev.clojure.org/jira/browse/CLJS-2377
                    :dependencies [[binaryage/devtools "0.9.7"]
                                   [re-frisk "0.5.3"]
-                                  [day8.re-frame/re-frame-10x "0.3.2"]
+                                  [day8.re-frame/re-frame-10x "0.3.2" :exclusions [binaryage/devtools]]
                                   [figwheel-sidecar "0.5.15"]
                                   [org.clojure/tools.nrepl "0.2.13"]
                                   [com.cemerick/piggieback "0.2.2"]]}})
