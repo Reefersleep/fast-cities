@@ -27,3 +27,10 @@
        (map (fn [[color cards]]
               [color (sort-stack cards)]))
        (into {})))
+
+(def default-keydown-rules
+  {:event-keys (->> (range 48 58)       ;; which-codes for numbers 1 through 0
+                    (into (list 13 32)) ;; which-codes for <Enter> and <Space>
+                    (map #(vector {:which %}))
+                    (into [[:enter-which-code]])
+                    vector)})

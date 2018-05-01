@@ -37,7 +37,7 @@
        fast-cities.db/sort-ascending
        (into {})))
 
-(def char-code->action
+(def char-code->action ;; Legacy
   {49  :cycle-handshake ;; charcodes for number row
    50  2
    51  3
@@ -51,6 +51,20 @@
    13  :next-colour ;; Enter in Chrome
    0   :next-colour ;; Enter in Firefox ;; TODO Maybe find a more cross-browser-resilient solution...
    32  :previous-colour})
+
+(def which-code->action
+  {49  :cycle-handshake ;; which-codes for numbers 1-0w
+   50  2
+   51  3
+   52  4
+   53  5
+   54  6
+   55  7
+   56  8
+   57  9
+   48  10
+   13  :next-colour       ;; which-code for <Enter>
+   32  :previous-colour}) ;; which-code for <Space>
 
 (re-frame.core/reg-event-fx
  :initialize-db
@@ -135,6 +149,34 @@
  :enter-char-code
  (fn [db [_ char-code]]
    (let [action (get char-code->action char-code)
+         current-color (:current-color db)
+         colors        (:colors db)]
+     (case action
+       nil              db
+       :next-colour     (update db :current-color (partial right-color-of colors))
+       :previous-colour (update db :current-color (partial left-color-of colors))
+       (-> (toggle-card db current-color action)
+           (update-in [:cards current-color] fast-cities.db/sort-stack))))))
+
+
+(defn update-db-from-which-code [db which-code]
+  (let [action (get which-code->action which-code)
+        current-color (:current-color db)
+        colors        (:colors db)]
+    (case action
+      nil              db
+      :next-colour     (update db :current-color (partial right-color-of colors))
+      :previous-colour (update db :current-color (partial left-color-of colors))
+      (-> (toggle-card db current-color action)
+          (update-in [:cards current-color] fast-cities.db/sort-stack)))))
+
+(re-frame.core/reg-event-db
+ :enter-which-code
+ (fn [db [_ event keyboard-keys]]
+   (let [which-code    (-> keyboard-keys
+                           last
+                           :which)
+         action        (get which-code->action which-code)
          current-color (:current-color db)
          colors        (:colors db)]
      (case action

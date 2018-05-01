@@ -3,7 +3,9 @@
      [reagent.core]
      [re-frame.core]
      [fast-cities.subs]
-     [fast-cities.events]))
+     [fast-cities.events]
+     [fast-cities.db]
+     [re-pressed.core]))
 
 ;; -------------------------
 ;; Views
@@ -264,6 +266,8 @@
 
 (defn init! []
   (re-frame.core/dispatch-sync [:initialize-db])
-  (add-event-dispatcher-for-keydown)
+  (re-frame.core/dispatch-sync [::re-pressed.core/add-keyboard-event-listener "keydown"])
+  (re-frame.core/dispatch-sync [::re-pressed.core/set-keydown-rules fast-cities.db/default-keydown-rules])
+  #_(add-event-dispatcher-for-keydown) ;; Legacy
   (mount-root))
 
