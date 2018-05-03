@@ -24,18 +24,15 @@
                   9
                   10])
 
-(def initialized-cards
-  (->> card-values
-       (map (fn [v]
-              [v false]))
+(defn initialize-map [ks initial-value]
+  (->> ks
+       (map #(vector % initial-value))
        (into {})))
 
 (def initialized-colors
-  (->> colors
-       (map (fn [color]
-              [color initialized-cards]))
-       fast-cities.db/sort-ascending
-       (into {})))
+  (->> (initialize-map card-values false)
+       (initialize-map colors)
+       fast-cities.db/sort-ascending))
 
 (def char-code->action ;; Legacy
   {49  :cycle-handshake ;; charcodes for number row
