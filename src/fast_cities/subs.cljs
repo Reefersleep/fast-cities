@@ -92,3 +92,8 @@
  :show-options?
  (fn [db _]
    (get db :show-options?)))
+
+(re-frame.core/reg-sub
+ :stacks-flipped?
+ (fn [db _]
+   (get db :stacks-flipped?)))

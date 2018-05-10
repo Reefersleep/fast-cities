@@ -50,7 +50,8 @@
    48  10
    13  :next-colour ;; Enter in Chrome
    0   :next-colour ;; Enter in Firefox ;; TODO Maybe find a more cross-browser-resilient solution...
-   32  :previous-colour})
+   32  :previous-colour
+   102 :flip-stacks}) ;; The 'f' key
 
 (re-frame.core/reg-event-fx
  :initialize-db
@@ -141,6 +142,7 @@
        nil              db
        :next-colour     (update db :current-color (partial right-color-of colors))
        :previous-colour (update db :current-color (partial left-color-of colors))
+       :flip-stacks     (update db :stacks-flipped? not)
        (-> (toggle-card db current-color action)
            (update-in [:cards current-color] fast-cities.db/sort-stack))))))
 
@@ -183,3 +185,9 @@
  (fn [db _]
    (-> db
        (update :show-options? not))))
+
+(re-frame.core/reg-event-db
+ :toggle-stack-flip
+ (fn [db _]
+   (-> db
+       (update :stacks-flipped? not))))

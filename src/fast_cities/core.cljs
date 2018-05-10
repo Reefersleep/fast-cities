@@ -191,7 +191,10 @@
     @(re-frame.core/subscribe [:score-for-color color-identity])]])
 
 (defn stacks [{:keys [:card-width-in-vw :card-values] :as args}]
-  [:div {:style {:display         :flex
+  [:div {:class (if @(re-frame.core/subscribe [:stacks-flipped?])
+                  "flipped"
+                  "unflipped")
+         :style {:display         :flex
                  :justify-content :space-between
                  :width           "70%"}}
    (->> color-identities
@@ -248,6 +251,8 @@
                    :width           "100%"
                    :display         :flex
                    :justify-content :flex-end}}
+     #_[:button {:on-click #(re-frame.core/dispatch [:toggle-stack-flip])}
+      "Flip"]
      #_[:button {:on-click #(re-frame.core/dispatch [:toggle-options])}
       "OPTIONS"]
      #_[:button {:on-click #(re-frame.core/dispatch [:toggle-score-details])}

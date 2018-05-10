@@ -30,3 +30,14 @@ a {
 a:hover {
   text-decoration: underline;
 }
+
+.flipped {
+    transform: rotate(180deg);
+    transition: transform 250ms ease;
+
+}
+
+.unflipped {
+    transform: rotate(0deg);
+    transition: transform 250ms ease;
+}
