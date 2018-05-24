@@ -195,10 +195,17 @@
 (re-frame.core/reg-event-db
  :toggle-grey-expedition
  (fn [db _]
-   (-> db
-       (update :colors (fn toggle-grey-expedition [colors]
-                         (if (some #{:grey} colors)
-                           (-> colors
-                               butlast
-                               vec)
-                           (into colors [:grey])))))))
+   (let [grey-expedition-added? (->> db
+                                     :colors
+                                     (some #{:grey}))]
+     (-> db
+         (update :colors (fn toggle-grey-expedition-color-identity [colors]
+                           (if grey-expedition-added?
+                             (-> colors
+                                 butlast
+                                 vec)
+                             (into colors [:grey]))))
+         (update :cards (fn toggle-grey-expedition-stack [cards]
+                           (if grey-expedition-added?
+                             (dissoc cards :grey)
+                             (merge cards (initialize-colors [:grey])))))))))
