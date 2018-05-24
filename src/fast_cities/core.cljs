@@ -19,9 +19,8 @@
                                    :blue   "rgb(18,176,237)"
                                    :red    "rgb(246,60,54)"
                                    :yellow "rgb(250,244,6)"
-                                   :green  "rgb(119,185,12)"})
-
-(def color-identities [:yellow :blue :white :green :red])
+                                   :green  "rgb(119,185,12)"
+                                   :grey   :grey})
 
 (defn card-width->card-height [card-width]
   (* card-width 1.63))
@@ -197,7 +196,7 @@
          :style {:display         :flex
                  :justify-content :space-between
                  :width           "70%"}}
-   (->> color-identities
+   (->> @(re-frame.core/subscribe [:color-identities])
         (map-indexed (fn [index color-identity]
                        ^{:key color-identity}
                        [stack-container {:card-values      (get card-values color-identity)
@@ -251,6 +250,10 @@
                    :width           "100%"
                    :display         :flex
                    :justify-content :flex-end}}
+     [:button {:on-click #(re-frame.core/dispatch [:toggle-grey-expedition])}
+      (if @(re-frame.core/subscribe [:grey-expedition-added?])
+        "Remove grey expedition"
+        "Add grey expedition")]
      #_[:button {:on-click #(re-frame.core/dispatch [:toggle-stack-flip])}
       "Flip"]
      #_[:button {:on-click #(re-frame.core/dispatch [:toggle-options])}

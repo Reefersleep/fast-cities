@@ -7,7 +7,7 @@
  :current-color)
 
 (re-frame.core/reg-sub
- :colors
+ :color-identities
  (fn [db _]
    (:colors db)))
 
@@ -97,3 +97,10 @@
  :stacks-flipped?
  (fn [db _]
    (get db :stacks-flipped?)))
+
+(re-frame.core/reg-sub
+ :grey-expedition-added?
+ (fn [db _]
+   (->> db
+        :colors
+        (some #{:grey}))))

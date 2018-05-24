@@ -30,7 +30,7 @@
               [v false]))
        (into {})))
 
-(def initialized-colors
+(defn initialize-colors [colors]
   (->> colors
        (map (fn [color]
               [color initialized-cards]))
@@ -56,7 +56,7 @@
 (re-frame.core/reg-event-fx
  :initialize-db
  (fn [_]
-   {:db {:cards               initialized-colors
+   {:db {:cards               (initialize-colors colors)
          :colors              colors
          :current-color       :white
          :show-score-details? false
@@ -191,3 +191,14 @@
  (fn [db _]
    (-> db
        (update :stacks-flipped? not))))
+
+(re-frame.core/reg-event-db
+ :toggle-grey-expedition
+ (fn [db _]
+   (-> db
+       (update :colors (fn toggle-grey-expedition [colors]
+                         (if (some #{:grey} colors)
+                           (-> colors
+                               butlast
+                               vec)
+                           (into colors [:grey])))))))
