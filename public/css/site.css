@@ -41,3 +41,11 @@ a:hover {
     transform: rotate(0deg);
     transition: transform 250ms ease;
 }
+
+button:focus {
+    outline: 0;
+}
+
+button:active {
+    background-color: lightgrey;
+}

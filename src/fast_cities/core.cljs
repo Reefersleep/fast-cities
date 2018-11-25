@@ -243,6 +243,17 @@
                  :flex-direction :column}}
    [modal]
    [:div {:style {:display         :flex
+                  :justify-content :flex-start
+                  :width           "100%"}}
+    [:button {:style {:margin-top      "2vw"
+                      :margin-left     "2vw"
+                      :text-decoration :none
+                      :border :outset
+                      :font-family "Lucida Sans Unicode"
+                      :font-size   "1.3vw"
+                      :color       :grey}}
+     "OPTIONS"]]
+   [:div {:style {:display         :flex
                   :flex-direction  :column
                   :width           "80%"
                   :align-items     :center}}
@@ -250,7 +261,9 @@
                    :width           "100%"
                    :display         :flex
                    :justify-content :flex-end}}
-     [:button {:on-click #(re-frame.core/dispatch [:toggle-grey-expedition])}
+     
+     #_[:button {:style {:border :outset}
+               :on-click #(re-frame.core/dispatch [:toggle-grey-expedition])}
       (if @(re-frame.core/subscribe [:grey-expedition-added?])
         "Remove grey expedition"
         "Add grey expedition")]
